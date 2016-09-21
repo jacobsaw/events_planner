@@ -1,0 +1,22 @@
+<h1>Edit Your Profile</h1><a href="/events/">Dashboard</a><a href="/users/logout">Logout</a>
+<% if flash[:errors] %>
+    <% flash[:errors].each do |x| %>
+    <p><%= x %></p>
+    <% end %>
+  <% end %>
+<form action='/users/<%=@user.id%>' method='post'>
+	<input name='authenticity_token' value='<%= form_authenticity_token %>' type='hidden'>
+	<input name='_method' value='patch' type='hidden'>
+	First Name: <input name='users[first_name]' value=<%=@user.first_name%> type='text'>
+	Last Name: <input name='users[last_name]' value=<%=@user.last_name%> type='text'>
+	Email: <input name='users[email]' value=<%=@user.email%> type='text'>
+	Location: <input name='users[city]' value=<%=@user.city%> type='text'>
+	State: <select name='users[state]'>
+		<option value='CA'>California</option>
+		<option value='MD'>Maryland</option>
+		<option value='WA'>Washington</option>
+	</select>
+	Password: <input name='users[password]' type='password'>
+	Confirm Password: <input name='users[password_confirmation]' type='password'>
+	<input type='submit' value='Update Records'>
+</form>

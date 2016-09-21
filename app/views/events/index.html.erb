@@ -1,0 +1,74 @@
+<h1>Welcome, <%=@user.first_name%>!</h1><a href="/users/<%=@user.id%>">Edit My Profile</a><a href="/users/logout">Logout</a>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+		<% @events_in_state.each do |e|%>
+		<tr>
+			<td><a href='/events/<%=e.id%>'><%= e.name %></a></td>
+			<td><%= e.date %></td>
+			<td><%= e.city %></td>
+			<td><%= e.host.first_name %></td>
+			<td>
+			<% if @user=e.host %>
+				<a href='#'>Edit</a>
+				<a href='/events/<%=e.id%>/delete'>Delete</a>
+			<% elsif e.users.include?(@user) %>
+				<p>Joining</p>
+				<a href='/events/attendance/<%=e.id%>/delete'>Cancel</a>
+			<% else %>
+				<a href='/events/attendance/<%=e.id%>'>Join</a>
+			<% end %>
+			</td>
+		</tr>
+		<%end%>
+	</table>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+		<% @events_out_of_state.each do |e|%>
+		<tr>
+			<td><a href='/events/<%=e.id%>'><%= e.name %></a></td>
+			<td><%= e.date %></td>
+			<td><%= e.city %></td>
+			<td><%= e.host.first_name %></td>
+			<td>
+			<% if @user==e.host %>
+				<a href='#'>Edit</a>
+				<a href='/events/<%=e.id%>/delete'>Delete</a>
+			<% elsif e.users.include?(@user) %>
+				<p>Joining</p>
+				<a href='/events/attendance/<%=e.id%>/delete'>Cancel</a>
+			<% else %>
+				<a href='/events/attendance/<%=e.id%>'>Join</a>
+			<% end %>
+			</td>
+		</tr>
+		<%end%>
+	</table>
+	<% if flash[:errors] %>
+    	<% flash[:errors].each do |x| %>
+    		<p><%= x %></p>
+    	<% end %>
+ 	 <% end %>
+	<form action='/events/' method='post'>
+		<input name='authenticity_token' value='<%= form_authenticity_token %>' type='hidden'>
+		Name: <input name='events[name]' type='text'>
+		Date: <input name='events[date]' type='date'>
+		Location: <input name='events[city]' type='text'>
+		State: <select name='events[state]'>
+			<option value='CA'>California</option>
+			<option value='MD'>Maryland</option>
+			<option value='WA'>Washington</option>
+		</select>
+		<input type='submit' value='Add Event'>
+	</form>

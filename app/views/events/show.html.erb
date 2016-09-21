@@ -1,0 +1,39 @@
+<h1><%=@event.name%></h1>
+<a href="/events/">Dashboard</a><a href="/users/logout">Logout</a>
+<p>Host: <%=@event.host.last_name%></p>
+<p>Date: <%=@event.date%></p>
+<p>Location: <%=@event.city%>, <%=@event.state%></p>
+<p>People who are joining the event: <%=@event.users.count%></p>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Location</th>
+			<th>State</th>
+		</tr>
+	</thead>
+		<% @event.users.each do |u| %>
+		<tr>
+			<td><%=u.first_name%> <%=u.last_name%></td>
+			<td><%=u.city%></td>
+			<td><%=u.state%></td>
+		</tr>
+		<%end%>
+</table>
+<h1>Discussion about this event:</h1>
+<div id='discussion'>
+	<% @event.comments.each do |c| %>
+		<p><%= c.user.first_name %> says <%= c.comment %></p>
+		<hr>
+	<% end %>
+</div>
+<form action='/events/<%=@event.id%>/comment' method='post'>
+	<input name='authenticity_token' value='<%= form_authenticity_token %>' type='hidden'>
+	<textarea name='comment'></textarea>
+	<input type='submit' value='Add Event'>
+</form>
+<% if flash[:errors] %>
+    	<% flash[:errors].each do |x| %>
+    		<p><%= x %></p>
+    	<% end %>
+<% end %>
